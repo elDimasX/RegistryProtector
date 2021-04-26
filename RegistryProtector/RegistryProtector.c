@@ -1,7 +1,7 @@
 ///
 /// Protetor de registro em kernel mode
 /// Use para proteger valores especificos
-/// Funciona para anti-cheat ou antivÌrus, atÈ malware
+/// Funciona para anti-cheat ou antiv√≠rus, at√© malware
 ///
 
 
@@ -15,7 +15,7 @@ BOOLEAN GetRegistryObjectCompleteName(
 	BOOLEAN Name = FALSE;
 	BOOLEAN Partial = FALSE;
 
-	// Se n„o for um endereÁo v·lido
+	// Se n√£o for um endere√ßo v√°lido
 	if (!MmIsAddressValid(RegistryObject) || RegistryObject == NULL)
 	{
 		return FALSE;
@@ -42,8 +42,8 @@ BOOLEAN GetRegistryObjectCompleteName(
 
 			if (NT_SUCCESS(Status))
 			{
-				// NÛs salvamos o nome do registro em ObjectName, agora passe para a v·riavel
-				// Path, para que a funÁ„o que nÛs chamou obtenha o nome do arquivo completo
+				// N√≥s salvamos o nome do registro em ObjectName, agora passe para a v√°riavel
+				// Path, para que a fun√ß√£o que n√≥s chamou obtenha o nome do arquivo completo
 				RtlCopyUnicodeString(Path, ObjectName);
 
 				// Sucesso
@@ -73,8 +73,8 @@ NTSTATUS DriverEntry(
 
 	/*
 	
-		Avisa que queremos obter operaÁıes que acontecem no registro
-		Mais explicaÁıes no link a seguir:
+		Avisa que queremos obter opera√ß√µes que acontecem no registro
+		Mais explica√ß√µes no link a seguir:
 		https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-cmregistercallbackex
 
 	*/
@@ -108,7 +108,7 @@ NTSTATUS RegistrerRegistryCallback(
 
 	if (
 
-		// Se for algumas destas operaÁıes
+		// Se for algumas destas opera√ß√µes
 		RegNtPreDeleteKey == Class ||
 		RegNtPreDeleteValueKey == Class ||
 		RegNtPreSetValueKey == Class ||
@@ -116,14 +116,14 @@ NTSTATUS RegistrerRegistryCallback(
 		RegNtPreRenameKey == Class
 	)
 	{
-		// Local que est· sendo modificado, vamos guarda-lÛ aqui
+		// Local que est√° sendo modificado, vamos guarda-l√≥ aqui
 		UNICODE_STRING Path;
 		Path.Length = 0;
 
-		// M·ximo de alocaÁ„o no UNICODE
+		// M√°ximo de aloca√ß√£o no UNICODE
 		Path.MaximumLength = 1024 * sizeof(WCHAR);
 
-		// Aloque um espaÁo na memÛria
+		// Aloque um espa√ßo na mem√≥ria
 		Path.Buffer = ExAllocatePoolWithTag(NonPagedPool, Path.MaximumLength, TAG);
 
 		if (Path.Buffer != NULL)
@@ -139,7 +139,7 @@ NTSTATUS RegistrerRegistryCallback(
 				return STATUS_SUCCESS;
 			}
 
-			// Obtenha o processo que est· tentando modificar os valores
+			// Obtenha o processo que est√° tentando modificar os valores
 			PEPROCESS Process = PsGetCurrentProcess();
 
 			if (wcsstr(Path.Buffer, L"Nottext File Remove") != NULL && GrantProcess(Process) == FALSE)
@@ -147,6 +147,8 @@ NTSTATUS RegistrerRegistryCallback(
 				ExFreePoolWithTag(Path.Buffer, TAG);
 				return STATUS_ACCESS_DENIED;
 			}
+			
+			ExFreePoolWithTag(Path.Buffer, TAG);
 		}
 	}
 
@@ -210,7 +212,7 @@ BOOLEAN GrantProcess(
 			return ProcessAllowed;
 		}
 
-		// Coloque o locais do arquivos aqui, eles poder„o modificar os registros
+		// Coloque o locais do arquivos aqui, eles poder√£o modificar os registros
 		// Protegidos
 		if (strstr(_strupr(ProcessName.Buffer), "C:\\WINDOWS\\EXPLORER.EXE"))
 		{
