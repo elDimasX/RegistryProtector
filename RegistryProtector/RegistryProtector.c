@@ -97,6 +97,7 @@ NTSTATUS DriverEntry(
 	return Status;
 }
 
+
 NTSTATUS RegistrerRegistryCallback(
 	_In_ PVOID Context,
 	_In_ PVOID Argument1,
